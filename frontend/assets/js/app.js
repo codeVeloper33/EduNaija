@@ -26,8 +26,8 @@ const firebaseConfig = {
     projectId: "edunaija-3a300",
     storageBucket: "edunaija-3a300.firebasestorage.app",
     messagingSenderId: "1009640557485",
-    appId: "1:1009640557485:web:55d29744ee91eb3a612f24",
-    measurementId: "G-2XLDH72DCT"
+    appId: "1:1009640557485:web:c7857e6293655c13612f24",
+    measurementId: "G-P0ZQNB0E62"
 };
 
 // ── WORKER URL — replace after deploying ──
