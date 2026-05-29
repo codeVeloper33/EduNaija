@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="description" content="EduNaija — AI Physics Tutor for Nigerian SSCE, WAEC & NECO students"/>
+  <meta name="theme-color" content="#0d0d0d"/>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/assets/img/logo.png"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="EduNaija — AI Physics Tutor"/>
+  <meta property="og:description" content="Master Physics for WAEC & NECO with AI"/>
+  <meta property="og:type"        content="website"/>
+
+  <title>EduNaija — AI Physics Tutor</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <link rel="stylesheet" href="assets/css/themes.css"/>
+  <link rel="stylesheet" href="assets/css/auth.css"/>
+
+  <!-- Prevent flash of wrong theme -->
+  <script>
+    const t = localStorage.getItem('edu-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  </script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════ -->
+<div id="landing" class="page active">
+  <div class="landing-inner">
+
+    <div class="landing-badge">🇳🇬 Made for Nigerian Students</div>
+
+    <h1 class="landing-title">
+      Master Physics<br/>with <span>EduNaija AI</span>
+    </h1>
+
+    <p class="landing-sub">
+      Your personal AI Physics tutor — trained on the Hidden Facts SSCE textbook.
+      Get instant answers, worked examples and exam tips for WAEC &amp; NECO.
+    </p>
+
+    <div class="landing-btns">
+      <button class="btn btn-primary btn-lg" onclick="showSignup()">Get Started Free</button>
+      <button class="btn btn-ghost btn-lg"   onclick="showLogin()">Sign In</button>
+    </div>
+
+    <div class="landing-features">
+      <div class="feature-pill"><span>📖</span><span>Hidden Facts Textbook</span></div>
+      <div class="feature-pill"><span>⚡</span><span>Instant Answers</span></div>
+      <div class="feature-pill"><span>🖼️</span><span>Image Analysis</span></div>
+      <div class="feature-pill"><span>🎤</span><span>Voice Input</span></div>
+      <div class="feature-pill"><span>📊</span><span>WAEC &amp; NECO Style</span></div>
+      <div class="feature-pill"><span>🌙</span><span>Dark Mode</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SIGN UP MODAL
+══════════════════════════════════════ -->
+<div id="signupModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Create Account</h2>
+      <button class="modal-close" onclick="closeSignup()">✕</button>
+    </div>
+
+    <div class="auth-form">
+      <div id="signupErr" class="auth-error"></div>
+
+      <div class="auth-field">
+        <label class="auth-label">Full Name</label>
+        <input id="signup-name" class="auth-input" type="text"
+          placeholder="e.g. Chidi Okeke" autocomplete="name"/>
+      </div>
+
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input id="signup-email" class="auth-input" type="email"
+          placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <div class="input-wrap">
+          <input id="signup-password" class="auth-input" type="password"
+            placeholder="At least 6 characters" autocomplete="new-password"/>
+          <span class="pw-toggle" onclick="togglePassword('signup-password', this)">👁️</span>
+        </div>
+      </div>
+
+      <div class="auth-field">
+        <label class="auth-label">Class / Year</label>
+        <select id="signup-class" class="auth-select">
+          <option value="SS1">SS1</option>
+          <option value="SS2">SS2</option>
+          <option value="SS3" selected>SS3</option>
+          <option value="Graduate">Graduate</option>
+        </select>
+      </div>
+
+      <button id="signupBtn" class="auth-submit" onclick="handleSignup()">
+        Create Account
+      </button>
+
+      <p class="auth-switch">
+        Already have an account?
+        <a onclick="showLogin()">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     LOGIN MODAL
+══════════════════════════════════════ -->
+<div id="loginModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Welcome Back</h2>
+      <button class="modal-close" onclick="closeLogin()">✕</button>
+    </div>
+
+    <div class="auth-form">
+      <div id="loginErr" class="auth-error"></div>
+
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input id="login-email" class="auth-input" type="email"
+          placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <div class="input-wrap">
+          <input id="login-password" class="auth-input" type="password"
+            placeholder="Your password" autocomplete="current-password"/>
+          <span class="pw-toggle" onclick="togglePassword('login-password', this)">👁️</span>
+        </div>
+        <div style="text-align:right;margin-top:4px">
+          <a style="font-size:12px;color:var(--gold);cursor:pointer"
+             onclick="forgotPassword(document.getElementById('login-email').value)">
+            Forgot password?
+          </a>
+        </div>
+      </div>
+
+      <button id="loginBtn" class="auth-submit" onclick="handleLogin()">
+        Sign In
+      </button>
+
+      <p class="auth-switch">
+        Don't have an account?
+        <a onclick="showSignup()">Create one</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TOASTS
+══════════════════════════════════════ -->
+<div id="toasts"></div>
+
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script type="module" src="assets/js/app.js"></script>
+<script type="module" src="assets/js/auth.js"></script>
+<script type="module" src="assets/js/ui.js"></script>
+<script type="module" src="assets/js/settings.js"></script>
+
+</body>
+</html>

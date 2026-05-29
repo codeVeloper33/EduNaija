@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0d0d0d"/>
+  <title>EduNaija — AI Physics Tutor</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <link rel="stylesheet" href="assets/css/themes.css"/>
+  <link rel="stylesheet" href="assets/css/layout.css"/>
+  <link rel="stylesheet" href="assets/css/chat.css"/>
+  <link rel="stylesheet" href="assets/css/settings.css"/>
+  <link rel="stylesheet" href="assets/css/auth.css"/>
+
+  <!-- Prevent theme flash -->
+  <script>
+    const t = localStorage.getItem('edu-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  </script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LANDING PAGE  (shown when logged out)
+══════════════════════════════════════ -->
+<div id="landing" class="page">
+  <div class="landing-inner">
+    <div class="landing-badge">🇳🇬 Made for Nigerian Students</div>
+    <h1 class="landing-title">Master Physics<br/>with <span>EduNaija AI</span></h1>
+    <p class="landing-sub">
+      Your personal AI Physics tutor — trained on the Hidden Facts SSCE textbook.
+      Get instant answers, worked examples and exam tips for WAEC &amp; NECO.
+    </p>
+    <div class="landing-btns">
+      <button class="btn btn-primary btn-lg" onclick="showSignup()">Get Started Free</button>
+      <button class="btn btn-ghost btn-lg"   onclick="showLogin()">Sign In</button>
+    </div>
+    <div class="landing-features">
+      <div class="feature-pill"><span>📖</span><span>Hidden Facts Textbook</span></div>
+      <div class="feature-pill"><span>⚡</span><span>Instant Answers</span></div>
+      <div class="feature-pill"><span>🖼️</span><span>Image Analysis</span></div>
+      <div class="feature-pill"><span>🎤</span><span>Voice Input</span></div>
+      <div class="feature-pill"><span>📊</span><span>WAEC &amp; NECO Style</span></div>
+      <div class="feature-pill"><span>🌙</span><span>Dark Mode</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     MAIN CHAT UI
+══════════════════════════════════════ -->
+<div id="chat-ui" class="page active">
+<div id="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar" class="sidebar">
+
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Edu<span>Naija</span></div>
+      <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    </div>
+
+    <!-- New Chat -->
+    <button class="new-chat-btn" onclick="newChat()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New chat
+    </button>
+
+    <!-- Search chats -->
+    <div class="sidebar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search chats…" oninput="filterChats(this.value)"/>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-item active" onclick="newChat(); closeSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Chats
+      </div>
+      <div class="sidebar-nav-item" onclick="openTopicPicker()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        Topics
+      </div>
+      <div class="sidebar-nav-item" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </div>
+    </nav>
+
+    <!-- Chat history -->
+    <div class="sidebar-section-label">Recents</div>
+    <div class="sidebar-history" id="chat-history">
+      <div class="sidebar-section-label" style="display:none"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-item" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span id="pd-name">Student</span>
+      </div>
+      <div class="sidebar-footer-item danger" onclick="doLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Log out
+      </div>
+    </div>
+
+  </aside><!-- /sidebar -->
+
+
+  <!-- ── OVERLAY ── -->
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+
+      <!-- Hamburger -->
+      <button id="hamburger" class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Logo -->
+      <div class="top-logo">Edu<span>Naija</span></div>
+
+      <!-- Topic pill -->
+      <button id="topicPill" class="topic-pill" onclick="openTopicPicker()">
+        Physics · Hidden Facts
+      </button>
+
+      <!-- Right actions -->
+      <div class="top-actions">
+
+        <!-- Notifications -->
+        <button class="top-icon-btn" onclick="openNotifications()" title="Notifications">
+          🔔
+          <span class="notif-dot" id="notifDot" style="display:none"></span>
+        </button>
+
+        <!-- Profile -->
+        <div class="profile-wrap">
+          <button class="profile-btn" id="profile-btn" onclick="toggleProfile()">A</button>
+
+          <!-- Profile dropdown -->
+          <div class="profile-dropdown" id="profile-dropdown">
+            <div class="profile-dropdown-header">
+              <div class="profile-dropdown-name" id="pd-name-drop">Student</div>
+              <div class="profile-dropdown-email" id="pd-email">—</div>
+              <div class="profile-dropdown-plan">
+                <span class="plan-badge free" id="pd-plan">Free</span>
+              </div>
+            </div>
+
+            <div class="profile-dropdown-item" onclick="openSettings()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+              Profile &amp; Settings
+            </div>
+
+            <div class="profile-dropdown-item" onclick="openSettings()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+              </svg>
+              Capabilities
+            </div>
+
+            <div class="profile-dropdown-item danger" onclick="doLogout()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Log out
+            </div>
+          </div>
+        </div><!-- /profile-wrap -->
+
+      </div><!-- /top-actions -->
+    </header><!-- /top-bar -->
+
+
+    <!-- ── CHAT BODY ── -->
+    <div id="chatBody" class="chat-body centered">
+      <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-icon">🎓</div>
+        <h2 class="welcome-title">Hello, <span id="welcome-name">Student</span>!</h2>
+        <p class="welcome-sub">
+          What would you like to learn today?<br/>
+          Ask me anything from your Physics syllabus.
+        </p>
+        <div class="prompt-grid">
+          <div class="prompt-card" onclick="usePrompt(this)">
+            <div class="pc-icon">⚡</div>
+            <div class="pc-text">
+              <strong>Ohm's Law</strong>What is Ohm's Law and its formula?
+            </div>
+          </div>
+          <div class="prompt-card" onclick="usePrompt(this)">
+            <div class="pc-icon">🌊</div>
+            <div class="pc-text">
+              <strong>Types of Waves</strong>Explain types of waves with examples
+            </div>
+          </div>
+          <div class="prompt-card" onclick="usePrompt(this)">
+            <div class="pc-icon">🍎</div>
+            <div class="pc-text">
+              <strong>Newton's Laws</strong>State Newton's Laws of Motion
+            </div>
+          </div>
+          <div class="prompt-card" onclick="usePrompt(this)">
+            <div class="pc-icon">☢️</div>
+            <div class="pc-text">
+              <strong>Radioactivity</strong>What is radioactive decay?
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /chatBody -->
+
+
+    <!-- ── INPUT BAR ── -->
+    <div class="chat-input-bar">
+
+      <!-- Image previews -->
+      <div id="imgPreviewRow" class="img-preview-row" style="display:none"></div>
+
+      <!-- Input row -->
+      <div class="input-box">
+
+        <!-- Upload button -->
+        <button class="upload-btn" title="Attach image"
+          onclick="document.getElementById('imgFileInput').click()">🖼️</button>
+        <input type="file" id="imgFileInput" accept="image/*" multiple
+          style="display:none" onchange="Upload.handleImageUpload(this)"/>
+
+        <!-- Voice button -->
+        <button id="voiceBtn" class="voice-btn" title="Voice input"
+          onclick="toggleVoice()">🎤</button>
+
+        <!-- Textarea -->
+        <textarea id="chat-input" rows="1"
+          placeholder="Ask EduNaija anything about Physics…"
+          oninput="autoResize(this)"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}">
+        </textarea>
+
+        <!-- Cancel button (shows during loading) -->
+        <button id="cancelBtn" class="cancel-btn" title="Cancel request"
+          onclick="cancelRequest()">✕</button>
+
+        <!-- Send button -->
+        <button id="sendBtn" class="send-btn" title="Send" onclick="sendMsg()">➤</button>
+
+      </div><!-- /input-box -->
+
+      <div class="input-hint">
+        EduNaija answers from Hidden Facts Physics textbook ·
+        <span id="questionsLeft">10</span> questions remaining today
+      </div>
+
+    </div><!-- /chat-input-bar -->
+
+  </div><!-- /main-content -->
+</div><!-- /app -->
+</div><!-- /chat-ui -->
+
+
+<!-- ══════════════════════════════════════
+     SETTINGS PAGE
+══════════════════════════════════════ -->
+<div id="settings-page" class="page">
+  <div class="settings-wrap">
+
+    <!-- Top bar -->
+    <div class="settings-topbar">
+      <button class="settings-back" onclick="closeSettings()">←</button>
+      <h1 class="settings-title">Settings</h1>
+      <button class="settings-info-btn" title="About">i</button>
+    </div>
+
+    <!-- User card -->
+    <div class="settings-user-card">
+      <span class="settings-user-email" id="settings-email">user@email.com</span>
+      <span class="plan-badge free" id="settings-plan">Free</span>
+    </div>
+
+    <!-- Upgrade banner -->
+    <div class="upgrade-banner" id="upgradeBanner">
+      <div class="upgrade-banner-title">Want more EduNaija?</div>
+      <div class="upgrade-banner-sub">
+        Upgrade for 100 questions/day, priority AI, and advanced features.
+      </div>
+      <button class="btn" onclick="window.UI?.showToast('Premium coming soon! 🚀')">
+        Upgrade
+      </button>
+    </div>
+
+    <!-- Profile & Billing -->
+    <div class="settings-group">
+      <div class="settings-item" onclick="window.UI?.showToast('Profile editing coming soon')">
+        <div class="settings-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Profile</div>
+          <div class="settings-item-value" id="pd-class">SS3</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+      <div class="settings-item" onclick="window.UI?.showToast('Billing coming soon')">
+        <div class="settings-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Billing</div>
+          <div class="settings-item-value">Free plan</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+    </div>
+
+    <!-- Usage stats -->
+    <div class="settings-stats">
+      <div class="stats-title">Today's Usage</div>
+      <div class="stats-row">
+        <span class="stats-label">Questions used</span>
+        <span class="stats-value"><span id="stats-used">0</span> / <span id="stats-max">10</span></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="stats-fill" style="width:0%"></div>
+      </div>
+      <div class="stats-row" style="margin-top:var(--space-3)">
+        <span class="stats-label">Total questions asked</span>
+        <span class="stats-value" id="stats-total">0</span>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="settings-group">
+
+      <!-- Color mode -->
+      <div class="settings-item" onclick="toggleThemePicker()">
+        <div class="settings-item-icon">🌙</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Color mode</div>
+          <div class="settings-item-value" id="settings-theme-value">Dark</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+
+      <!-- Theme picker (hidden by default) -->
+      <div id="themePicker" class="theme-options" style="display:none">
+        <div class="theme-option active" data-theme="dark" onclick="setTheme('dark')">
+          <div class="theme-preview dark"></div>
+          <div class="theme-label">Dark</div>
+        </div>
+        <div class="theme-option" data-theme="light" onclick="setTheme('light')">
+          <div class="theme-preview light"></div>
+          <div class="theme-label">Light</div>
+        </div>
+        <div class="theme-option" data-theme="system" onclick="setTheme('system')">
+          <div class="theme-preview system"></div>
+          <div class="theme-label">System</div>
+        </div>
+      </div>
+
+      <!-- Font style -->
+      <div class="settings-item" onclick="toggleFontPicker()">
+        <div class="settings-item-icon">Aa</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Font style</div>
+          <div class="settings-item-value" id="settings-font-value">Default</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+
+      <!-- Font picker -->
+      <div id="fontPicker" class="font-options" style="display:none">
+        <div class="font-option active" data-font="default" onclick="setFont('default')">
+          <div>
+            <div class="font-name">Default</div>
+            <div class="font-sample" style="font-family:'DM Sans',sans-serif">The quick brown fox</div>
+          </div>
+          <span class="font-check">✓</span>
+        </div>
+        <div class="font-option" data-font="serif" onclick="setFont('serif')">
+          <div>
+            <div class="font-name">Serif</div>
+            <div class="font-sample" style="font-family:'Playfair Display',serif">The quick brown fox</div>
+          </div>
+          <span class="font-check">✓</span>
+        </div>
+        <div class="font-option" data-font="mono" onclick="setFont('mono')">
+          <div>
+            <div class="font-name">Monospace</div>
+            <div class="font-sample" style="font-family:monospace">The quick brown fox</div>
+          </div>
+          <span class="font-check">✓</span>
+        </div>
+        <div class="font-option" data-font="system" onclick="setFont('system')">
+          <div>
+            <div class="font-name">System</div>
+            <div class="font-sample" style="font-family:system-ui">The quick brown fox</div>
+          </div>
+          <span class="font-check">✓</span>
+        </div>
+      </div>
+
+      <!-- Speech language -->
+      <div class="settings-item">
+        <div class="settings-item-icon">🌐</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Speech language</div>
+          <div class="settings-item-value" id="settings-speech-value">English (Nigeria)</div>
+        </div>
+        <div class="settings-item-right">
+          <select onchange="setSpeechLang(this.value)"
+            style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer">
+            <option value="en-NG">English (Nigeria)</option>
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="yo-NG">Yoruba</option>
+            <option value="ha-NG">Hausa</option>
+            <option value="ig-NG">Igbo</option>
+          </select>
+        </div>
+      </div>
+
+    </div><!-- /appearance group -->
+
+    <!-- Preferences -->
+    <div class="settings-group">
+      <div class="settings-item">
+        <div class="settings-item-icon">📳</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Haptic feedback</div>
+        </div>
+        <div class="settings-item-right">
+          <label class="toggle">
+            <input type="checkbox" id="haptic-toggle" checked onchange="toggleHaptic(this)"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item-icon">🔔</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Notifications</div>
+        </div>
+        <div class="settings-item-right">
+          <label class="toggle">
+            <input type="checkbox" id="notif-toggle" checked onchange="toggleNotifications(this)"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Legal -->
+    <div class="settings-group">
+      <div class="settings-item" onclick="openPrivacy()">
+        <div class="settings-item-icon">🔒</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Privacy</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+      <div class="settings-item" onclick="openSharedLinks()">
+        <div class="settings-item-icon">🔗</div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Shared links</div>
+        </div>
+        <div class="settings-item-right"><span class="chevron">›</span></div>
+      </div>
+    </div>
+
+    <!-- Log out -->
+    <div class="settings-group">
+      <div class="settings-item danger" onclick="doLogout()">
+        <div class="settings-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <div class="settings-item-content">
+          <div class="settings-item-label">Log out</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:40px"></div>
+
+  </div><!-- /settings-wrap -->
+</div><!-- /settings-page -->
+
+
+<!-- ══════════════════════════════════════
+     TOPIC PICKER MODAL
+══════════════════════════════════════ -->
+<div id="topicModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">📖 Select Topic</h2>
+      <button class="modal-close" onclick="closeTopicPicker()">✕</button>
+    </div>
+    <input class="input" type="text" placeholder="Search topics…"
+      oninput="filterTopics(this.value)"
+      style="margin-bottom:var(--space-4)"/>
+    <div id="topicList" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto">
+      <div style="color:var(--text-muted);font-size:13px;padding:8px">Loading topics…</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     AUTH MODALS
+══════════════════════════════════════ -->
+
+<!-- Sign up -->
+<div id="signupModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Create Account</h2>
+      <button class="modal-close" onclick="closeSignup()">✕</button>
+    </div>
+    <div class="auth-form">
+      <div id="signupErr" class="auth-error"></div>
+      <div class="auth-field">
+        <label class="auth-label">Full Name</label>
+        <input id="signup-name" class="auth-input" type="text" placeholder="e.g. Chidi Okeke" autocomplete="name"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input id="signup-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <div class="input-wrap">
+          <input id="signup-password" class="auth-input" type="password" placeholder="At least 6 characters" autocomplete="new-password"/>
+          <span class="pw-toggle" onclick="togglePassword('signup-password', this)">👁️</span>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Class</label>
+        <select id="signup-class" class="auth-select">
+          <option value="SS1">SS1</option>
+          <option value="SS2">SS2</option>
+          <option value="SS3" selected>SS3</option>
+          <option value="Graduate">Graduate</option>
+        </select>
+      </div>
+      <button id="signupBtn" class="auth-submit" onclick="handleSignup()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Login -->
+<div id="loginModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Welcome Back</h2>
+      <button class="modal-close" onclick="closeLogin()">✕</button>
+    </div>
+    <div class="auth-form">
+      <div id="loginErr" class="auth-error"></div>
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input id="login-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <div class="input-wrap">
+          <input id="login-password" class="auth-input" type="password" placeholder="Your password" autocomplete="current-password"/>
+          <span class="pw-toggle" onclick="togglePassword('login-password', this)">👁️</span>
+        </div>
+        <div style="text-align:right;margin-top:4px">
+          <a style="font-size:12px;color:var(--gold);cursor:pointer"
+            onclick="forgotPassword(document.getElementById('login-email').value)">
+            Forgot password?
+          </a>
+        </div>
+      </div>
+      <button id="loginBtn" class="auth-submit" onclick="handleLogin()">Sign In</button>
+      <p class="auth-switch">Don't have an account? <a onclick="showSignup()">Create one</a></p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TOASTS
+══════════════════════════════════════ -->
+<div id="toasts"></div>
+
+
+<!-- ══════════════════════════════════════
+     INLINE UTILS
+══════════════════════════════════════ -->
+<script>
+  // Theme/font pickers toggle
+  function toggleThemePicker() {
+    const el = document.getElementById('themePicker');
+    if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+  }
+  function toggleFontPicker() {
+    const el = document.getElementById('fontPicker');
+    if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+    if (el && el.style.display === 'flex') el.style.flexDirection = 'column';
+  }
+
+  // Topic list item style
+  document.addEventListener('DOMContentLoaded', () => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .topic-list-item {
+        display:flex;align-items:center;gap:10px;
+        padding:11px 12px;border-radius:10px;cursor:pointer;
+        font-size:14px;color:var(--text-sub);transition:var(--transition);
+      }
+      .topic-list-item:hover{background:var(--bg3);color:var(--text);}
+      .topic-list-icon{font-size:16px;flex-shrink:0;}
+    `;
+    document.head.appendChild(style);
+  });
+</script>
+
+
+<!-- ══════════════════════════════════════
+     JS MODULES
+══════════════════════════════════════ -->
+<script type="module" src="assets/js/app.js"></script>
+<script type="module" src="assets/js/auth.js"></script>
+<script type="module" src="assets/js/ui.js"></script>
+<script type="module" src="assets/js/settings.js"></script>
+<script type="module" src="assets/js/session.js"></script>
+<script type="module" src="assets/js/rag.js"></script>
+<script type="module" src="assets/js/upload.js"></script>
+<script type="module" src="assets/js/voice.js"></script>
+<script type="module" src="assets/js/search.js"></script>
+<script type="module" src="assets/js/chat.js"></script>
+
+</body>
+</html>
