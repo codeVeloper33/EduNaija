@@ -31,7 +31,7 @@ const firebaseConfig = {
 };
 
 // ── WORKER URL — replace after deploying ──
-export const WORKER_URL = "https://edunaija-worker.YOUR_SUBDOMAIN.workers.dev";
+export const WORKER_URL = "edunaija.izymoni33.workers.dev";
 
 // ── INIT ──
 const firebaseApp = initializeApp(firebaseConfig);
