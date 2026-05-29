@@ -111,7 +111,8 @@ onAuthStateChanged(auth, async (user) => {
     if (window.Sessions) await window.Sessions.loadFromFirestore();
 
     State.isReady = true;
-    showPage('chat-ui');
+document.getElementById('landing').style.display = 'none';
+showPage('chat-ui');
 
   } else {
     State.user    = null;
@@ -122,7 +123,8 @@ onAuthStateChanged(auth, async (user) => {
 
     if (window.Sessions) window.Sessions.clear();
     if (window.Chat)     window.Chat.reset();
-    showPage('landing');
+    document.getElementById('landing').style.display = 'flex';
+showPage('landing');
   }
 });
 
