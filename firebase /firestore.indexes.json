@@ -1,0 +1,76 @@
+{
+  "indexes": [
+
+    // ── CHAT SESSIONS ──
+    // Load sessions ordered by most recent first
+    {
+      "collectionGroup": "sessions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // ── TOPICS ──
+    // Load topics in curriculum order
+    {
+      "collectionGroup": "topics",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+
+    // Topics filtered by category + order
+    {
+      "collectionGroup": "topics",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "order",    "order": "ASCENDING" }
+      ]
+    },
+
+    // ── NOTIFICATIONS ──
+    {
+      "collectionGroup": "items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "read",      "order": "ASCENDING"  },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // ── SHARED LINKS ──
+    {
+      "collectionGroup": "shared",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ownerId",   "order": "ASCENDING"  },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+
+  "fieldOverrides": [
+
+    // Don't index large content fields — saves Firestore read cost
+    {
+      "collectionGroup": "topics",
+      "fieldPath": "content",
+      "indexes": []
+    },
+
+    // Don't index full message history arrays
+    {
+      "collectionGroup": "sessions",
+      "fieldPath": "history",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "sessions",
+      "fieldPath": "messages",
+      "indexes": []
+    }
+  ]
+}

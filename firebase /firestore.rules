@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── HELPER FUNCTIONS ──
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+    function isValidString(val, maxLen) {
+      return val is string && val.size() <= maxLen;
+    }
+
+    // ── USERS ──
+    // Users can only read/write their own profile
+    match /users/{userId} {
+      allow read:   if isSignedIn() && isOwner(userId);
+      allow create: if isSignedIn() && isOwner(userId)
+                    && isValidString(request.resource.data.name,  100)
+                    && isValidString(request.resource.data.email, 200)
+                    && isValidString(request.resource.data.class,  20);
+      allow update: if isSignedIn() && isOwner(userId)
+                    // Prevent users from changing their own plan
+                    && !request.resource.data.diff(resource.data).affectedKeys()
+                        .hasAny(['plan', 'createdAt']);
+      allow delete: if false; // Never delete user profiles
+    }
+
+    // ── CHAT SESSIONS ──
+    // Users can only read/write their own chat sessions
+    match /chats/{userId}/sessions/{sessionId} {
+      allow read:   if isSignedIn() && isOwner(userId);
+      allow write:  if isSignedIn() && isOwner(userId)
+                    && isValidString(request.resource.data.title, 200);
+      allow delete: if isSignedIn() && isOwner(userId);
+    }
+
+    // ── TOPICS (Physics textbook content) ──
+    // All signed-in users can read topics
+    // Only admins can write (via Firebase Admin SDK)
+    match /topics/{topicId} {
+      allow read:  if isSignedIn();
+      allow write: if false; // Admin only via backend
+    }
+
+    // ── SHARED LINKS ──
+    match /shared/{linkId} {
+      allow read:   if true; // Public — shareable links
+      allow create: if isSignedIn()
+                    && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn()
+                    && resource.data.ownerId == request.auth.uid;
+      allow delete: if isSignedIn()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ── NOTIFICATIONS ──
+    match /notifications/{userId}/items/{notifId} {
+      allow read:   if isSignedIn() && isOwner(userId);
+      allow write:  if false; // Written by backend Worker only
+      allow delete: if isSignedIn() && isOwner(userId);
+    }
+
+    // ── DEFAULT: deny everything else ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

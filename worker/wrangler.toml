@@ -1,0 +1,17 @@
+name = "edunaija-worker"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://your-edunaija-site.com"
+
+# Secrets (set via: wrangler secret put SECRET_NAME)
+# GEMINI_KEY
+# GROQ_KEY
+# FIREBASE_PROJECT_ID
+# FIREBASE_CLIENT_EMAIL
+# FIREBASE_PRIVATE_KEY
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "your-kv-namespace-id"
