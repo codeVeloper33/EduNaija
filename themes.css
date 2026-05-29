@@ -1,0 +1,147 @@
+/* ============================================
+   EduNaija — themes.css
+   Theme transition, color mode switcher styles
+   Actual color tokens live in main.css :root
+   ============================================ */
+
+/* ── SMOOTH THEME TRANSITION ── */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Override transition for things that should NOT animate on theme change */
+.no-theme-transition,
+.chat-body,
+.msg,
+.bubble,
+.typing-wrap,
+.prompt-card,
+input,
+textarea,
+button {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease,
+    box-shadow 0.3s ease,
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── THEME: DARK (default) ── */
+[data-theme="dark"],
+:root {
+  color-scheme: dark;
+}
+
+/* ── THEME: LIGHT ── */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Specific light mode overrides for components */
+[data-theme="light"] .msg.user .bubble {
+  background: var(--gold);
+  color: #fff;
+}
+[data-theme="light"] .msg.ai .bubble {
+  background: #f0f0f0;
+  border-color: #ddd;
+  color: #111;
+}
+[data-theme="light"] .typing-wrap {
+  background: #f0f0f0;
+  border-color: #ddd;
+}
+[data-theme="light"] .sidebar {
+  background: #fafafa;
+}
+[data-theme="light"] .top-bar {
+  background: #fafafa;
+}
+[data-theme="light"] .chat-input-bar {
+  background: #fff;
+}
+[data-theme="light"] .input-box {
+  background: #fafafa;
+}
+[data-theme="light"] .prompt-card {
+  background: #fafafa;
+}
+[data-theme="light"] .toast {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+[data-theme="light"] .profile-dropdown {
+  background: #fafafa;
+}
+[data-theme="light"] .modal {
+  background: #fafafa;
+}
+[data-theme="light"] .settings-group {
+  background: #fafafa;
+}
+[data-theme="light"] .upgrade-banner {
+  background: linear-gradient(135deg, #fafafa 0%, rgba(196,130,0,0.06) 100%);
+}
+
+/* ── THEME: SYSTEM ── */
+[data-theme="system"] {
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] .msg.ai .bubble {
+    background: #f0f0f0;
+    border-color: #ddd;
+    color: #111;
+  }
+  [data-theme="system"] .msg.user .bubble {
+    background: var(--gold);
+    color: #fff;
+  }
+  [data-theme="system"] .sidebar { background: #fafafa; }
+  [data-theme="system"] .top-bar { background: #fafafa; }
+  [data-theme="system"] .chat-input-bar { background: #fff; }
+  [data-theme="system"] .input-box { background: #fafafa; }
+  [data-theme="system"] .settings-group { background: #fafafa; }
+  [data-theme="system"] .toast { background: #fff; }
+}
+
+/* ── FONT THEMES ── */
+[data-font="default"] {
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+[data-font="serif"] {
+  --font-body: 'Playfair Display', Georgia, serif;
+}
+[data-font="mono"] {
+  --font-body: 'JetBrains Mono', 'Fira Code', monospace;
+}
+[data-font="system"] {
+  --font-body: system-ui, -apple-system, sans-serif;
+}
+
+/* Apply font theme to body text */
+[data-font] .bubble,
+[data-font] #chat-input,
+[data-font] .chat-item,
+[data-font] .settings-item-label,
+[data-font] .input-hint,
+[data-font] .msg-label {
+  font-family: var(--font-body);
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
